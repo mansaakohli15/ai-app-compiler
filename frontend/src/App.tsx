@@ -1,11 +1,44 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+
+interface MetricsType {
+  latency: number;
+  repairCount: number;
+  issuesResolved: string[];
+  executable: boolean;
+}
+
+interface OutputType {
+  metadata: {
+    appName: string;
+    version: string;
+    generatedAt: string;
+    confidence: number;
+    assumptions: string[];
+  };
+  database: {
+    entities: Array<{ name: string; fields: Array<{ name: string; type: string }> }>;
+    relations: any[];
+  };
+  api: {
+    endpoints: Array<{ path: string; method: string; entity: string; auth: string[] }>;
+  };
+  auth: {
+    roles: Array<{ name: string; permissions: string[] }>;
+    defaultRole: string;
+  };
+  ui: {
+    pages: Array<{ name: string; path: string; components: any[] }>;
+    layout: { navigation: Array<{ label: string; path: string; roles: string[] }> };
+  };
+  businessLogic: any[];
+}
 
 function App() {
   const [prompt, setPrompt] = useState('');
-  const [output, setOutput] = useState(null);
+  const [output, setOutput] = useState<OutputType | null>(null);
   const [loading, setLoading] = useState(false);
-  const [metrics, setMetrics] = useState(null);
-  const [error, setError] = useState(null);
+  const [metrics, setMetrics] = useState<MetricsType | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState('config');
 
   const compileApp = async () => {
@@ -19,7 +52,7 @@ function App() {
     setOutput(null);
     
     try {
-      const response = await fetch('http://localhost:3000/compile', {
+      const response = await fetch('https://ai-app-compiler-backend-ih1l.onrender.com/compile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt })
@@ -36,7 +69,7 @@ function App() {
         setError(data.error || 'Compilation failed');
       }
     } catch (err: any) {
-      setError(`❌ Cannot connect to compiler server. Make sure backend is running on port 3000.\n\nError: ${err.message}`);
+      setError(`❌ Cannot connect to compiler server.\n\nError: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -49,19 +82,17 @@ function App() {
     "Build a blog platform with posts, comments, and author profiles"
   ];
 
-  // UNIQUE COLOR PALETTE: Terracotta + Sage Green + Cream
-  // This is a warm, earthy, premium color scheme rarely used in AI products
   const colors = {
-    bgDark: '#2A2B2A',      // Dark charcoal with hint of green
-    bgCard: '#3D3E3D',       // Warm dark gray
-    accent1: '#D4755B',      // Terracotta (warm earth tone)
-    accent2: '#8A9A7B',      // Sage green
-    accent3: '#E8DCC6',      // Cream
-    textLight: '#F5F0E6',    // Warm off-white
-    textMuted: '#B5B0A4',    // Muted warm gray
-    success: '#7C9A6E',      // Muted green
-    error: '#C96A5B',        // Muted red
-    border: '#4A4B4A'        // Subtle border
+    bgDark: '#2A2B2A',
+    bgCard: '#3D3E3D',
+    accent1: '#D4755B',
+    accent2: '#8A9A7B',
+    accent3: '#E8DCC6',
+    textLight: '#F5F0E6',
+    textMuted: '#B5B0A4',
+    success: '#7C9A6E',
+    error: '#C96A5B',
+    border: '#4A4B4A'
   };
 
   return (
@@ -72,7 +103,6 @@ function App() {
     }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 24px' }}>
         
-        {/* Header with unique styling */}
         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
           <div style={{
             display: 'inline-flex',
@@ -112,7 +142,6 @@ function App() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px' }}>
-          {/* Input Section */}
           <div style={{ 
             background: colors.bgCard,
             borderRadius: '20px',
@@ -231,7 +260,6 @@ function App() {
             </button>
           </div>
 
-          {/* Output Section */}
           <div style={{ 
             background: colors.bgCard,
             borderRadius: '20px',
@@ -240,7 +268,6 @@ function App() {
             display: 'flex',
             flexDirection: 'column'
           }}>
-            {/* Tab Bar */}
             <div style={{
               display: 'flex',
               borderBottom: `1px solid ${colors.border}`,
@@ -411,7 +438,6 @@ function App() {
           </div>
         </div>
 
-        {/* Stats Bar */}
         <div style={{
           marginTop: '32px',
           display: 'grid',
