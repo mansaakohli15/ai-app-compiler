@@ -174,9 +174,8 @@
 
 | Item | Link |
 |------|------|
-| Live Demo | https://your-app.vercel.app |
-| GitHub Repository | https://github.com/YOUR_USERNAME/ai-app-compiler |
-| Loom Video | https://loom.com/your-link |
+| Live Demo | https://ai-app-compiler-1c2sn6wb2-mansaa-kohlis-projects.vercel.app |
+| GitHub Repository | https://github.com/mansaakohli15/ai-app-compiler |
 
 ---
 
